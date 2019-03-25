@@ -1,47 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Editor</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="js/jscolor.js"></script>
     <script src="jsontypes.js"></script>
     <style>
         #page-viewer {
             width: 600px;
             height: 800px;
             border: 1px solid black;
+            
         }
     </style>
 </head>
+
 <body>
     <h2>Memory Book Editor</h2>
-    <div id='app'>
+    <div>
         <span v-bind:title='message'>hello</span>
-        <div id='page-viewer'>
-
+        <div id='page-viewer' v-bind:style='{background: bgColorInHex}'>
+            <div> {{ bgColorInHex }}</div>
         </div>
     </div>
 
 
 
     <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                message: new Date().toLocaleString()
-            }
-        });
-
+        var Color = net.brehaut.Color;
         var page_viewer = new Vue({
             el: '#page-viewer',
-            data: {
-
+            data() {
+                return {
+                    page: null
+                }
+            },
+            mounted() {
+                axios.get('editor/get_page.php?bookname=testbook&pageno=1')
+                    .then(response => {
+                        this.page = response.data;
+                        // console.log(this.page);
+                    })
+                    .catch(error => { console.log(error); })
+            },
+            computed: {
+                bgColorInHex: function () {
+                    if (this.page == null) {
+                        return 'white';
+                    }
+                    return this.page.BackgroundColor;
+                }
             }
-        });
 
-        
+        });
     </script>
 </body>
+
 </html>
