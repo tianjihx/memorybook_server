@@ -8,14 +8,16 @@
     <title>Editor</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="js/jscolor.js"></script>
+    <script src="js/color.js"></script>
+    <script src="js/util.js"></script>
     <script src="jsontypes.js"></script>
     <style>
         #page-viewer {
             width: 600px;
             height: 800px;
             border: 1px solid black;
-            
+            color: white;
+
         }
     </style>
 </head>
@@ -25,7 +27,6 @@
     <div>
         <span v-bind:title='message'>hello</span>
         <div id='page-viewer' v-bind:style='{background: bgColorInHex}'>
-            <div> {{ bgColorInHex }}</div>
         </div>
     </div>
 
@@ -53,8 +54,13 @@
                     if (this.page == null) {
                         return 'white';
                     }
-                    return this.page.BackgroundColor;
-                }
+                    var bg = this.page.BackgroundColor
+                    var rgb = StringFormat("rgb({0},{1},{2})", parseInt(bg.r * 255), parseInt(bg.g * 255), parseInt(bg.b * 255));
+                    console.log(rgb);
+                    var color = Color(rgb);
+                    console.log(color);
+                    return color.toCSS();
+                },
             }
 
         });
