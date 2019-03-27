@@ -8,8 +8,8 @@
     <title>Editor</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="js/color.js"></script>
-    <script src="js/util.js"></script>
+    <!-- <script src="js/color.js"></script> -->
+    <script src="js/utils.js"></script>
     <script src="jsontypes.js"></script>
     <style>
         #page-viewer {
@@ -25,15 +25,44 @@
 <body>
     <h2>Memory Book Editor</h2>
     <div>
-        <span v-bind:title='message'>hello</span>
+        <div id="book">
+            <ul>
+                <li v-for='page in book.PaperNameList'>
+                    <a href="#" v-on:click='showpage' >{{ page }}</a>
+                </li>
+            </ul>
+        </div>
         <div id='page-viewer' v-bind:style='{background: bgColorInHex}'>
+            <img src="data/testbook/images/古剑奇谭3.jpg" alt="" width="300" height="200"
+                style="margin-left: 30px; margin-top: 50px">
         </div>
     </div>
 
 
 
     <script>
-        var Color = net.brehaut.Color;
+        var book = new Vue({
+            el: '#book',
+            data() {
+                return {
+                    book: new Book()
+                }
+            },
+            mounted() {
+                axios.get('editor/get_book.php?bookname=testbook')
+                    .then(response => {
+                        this.book = response.data;
+                    })
+                    .catch(error => { console.log(error); })
+            },
+            methods: {
+                showpage: function (event) {
+                    console.log(event.target.text);
+                }
+            },
+        });
+
+
         var page_viewer = new Vue({
             el: '#page-viewer',
             data() {
@@ -54,12 +83,9 @@
                     if (this.page == null) {
                         return 'white';
                     }
-                    var bg = this.page.BackgroundColor
-                    var rgb = StringFormat("rgb({0},{1},{2})", parseInt(bg.r * 255), parseInt(bg.g * 255), parseInt(bg.b * 255));
-                    console.log(rgb);
-                    var color = Color(rgb);
+                    var color = jcolor2css(this.page.BackgroundColor);
                     console.log(color);
-                    return color.toCSS();
+                    return color;
                 },
             }
 
