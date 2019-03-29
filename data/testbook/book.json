@@ -2,7 +2,8 @@
     "Name": "TestBook",
     "PaperCount": 1,
     "PaperNameList": [
-        "p_1"
+        "p1",
+        "p2"
     ],
     "Width": 30,
     "Height": 20

@@ -1,7 +1,7 @@
 <?php
 $bookname = $_GET["bookname"];
-$pageno = (int)$_GET["pageno"];
-$page_path = sprintf('../data/%s/p%d.json', $bookname, $pageno);
+$pagename = $_GET["pagename"];
+$page_path = sprintf('../data/%s/%s.json', $bookname, $pagename);
 if (!file_exists($page_path))
 {
     echo 'page file not found';

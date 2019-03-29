@@ -6,18 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Editor</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- <script src="js/color.js"></script> -->
-    <script src="js/utils.js"></script>
-    <script src="jsontypes.js"></script>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
     <style>
         #page-viewer {
             width: 600px;
             height: 800px;
             border: 1px solid black;
             color: white;
-
         }
     </style>
 </head>
@@ -25,22 +23,46 @@
 <body>
     <h2>Memory Book Editor</h2>
     <div>
+        <div id='app'>
+            <el-container>
+                <el-aside width="200px">Aside</el-aside>
+                <el-container>
+                    <el-header>Header</el-header>
+                    <el-main>
+                        <v-book></v-book>
+                    </el-main>
+                    <el-footer>Footer</el-footer>
+                </el-container>
+            </el-container>
+        </div>
+
         <div id="book">
             <ul>
                 <li v-for='page in book.PaperNameList'>
-                    <a href="#" v-on:click='showpage' >{{ page }}</a>
+                    <a href="#" v-on:click='showpage'>{{ page }}</a>
                 </li>
             </ul>
         </div>
+
         <div id='page-viewer' v-bind:style='{background: bgColorInHex}'>
             <img src="data/testbook/images/古剑奇谭3.jpg" alt="" width="300" height="200"
                 style="margin-left: 30px; margin-top: 50px">
         </div>
     </div>
+</body>
 
-
-
+<body>
+    <!-- 引入组件库 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="jsontypes.js"></script>
     <script>
+        var app = new Vue({
+            el: '#app'
+        });
+
         var book = new Vue({
             el: '#book',
             data() {
@@ -57,6 +79,10 @@
             },
             methods: {
                 showpage: function (event) {
+                    axios.get('editor/get_page.php?bookname=testbook&pagename=' + event.target.text)
+                        .then(response => {
+                            page_viewer.load(response.data);
+                        });
                     console.log(event.target.text);
                 }
             },
@@ -67,16 +93,9 @@
             el: '#page-viewer',
             data() {
                 return {
-                    page: null
+                    page: null,
+                    isface: false
                 }
-            },
-            mounted() {
-                axios.get('editor/get_page.php?bookname=testbook&pageno=1')
-                    .then(response => {
-                        this.page = response.data;
-                        // console.log(this.page);
-                    })
-                    .catch(error => { console.log(error); })
             },
             computed: {
                 bgColorInHex: function () {
@@ -87,10 +106,18 @@
                     console.log(color);
                     return color;
                 },
+            },
+            methods: {
+                load: function (pageData) {
+                    this.page = pageData;
+                    isface = false;
+                }
             }
 
         });
     </script>
 </body>
+
+
 
 </html>

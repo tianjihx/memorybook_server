@@ -1,0 +1,47 @@
+{
+    "BackgroundColor": {
+        "r": 0.05,
+        "g": 0.18,
+        "b": 0.05
+    },
+    "FaceContent": [
+        {
+            "Type": "Picture",
+            "Position": {
+                "X": 1.0,
+                "Y": 1.0
+            },
+            "Width": 5.0,
+            "Height": 3.0,
+            "FileName": "古剑奇谭3.jpg",
+            "Text": "",
+            "FontSize": 0
+        },
+        {
+            "Type": "Memo",
+            "Position": {
+                "X": 1.0,
+                "Y": 1.0
+            },
+            "Width": 8.0,
+            "Height": 6.0,
+            "FileName": "",
+            "Text": "这是第二页",
+            "FontSize": 12
+        }
+    ],
+    "BackContent": [
+        {
+            "Type": "Picture",
+            "Position": {
+                "X": 1.0,
+                "Y": 1.0
+            },
+            "Width": 12.7,
+            "Height": 8.9,
+            "FileName": "古剑奇谭3.jpg",
+            "Text": "",
+            "FontSize": 0
+        }
+    ]
+}
