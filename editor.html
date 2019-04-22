@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 
     <style>
-        #page-viewer {
-            width: 600px;
-            height: 800px;
+        .page-viewer {
+            width: 13cm;
+            height: 23cm;
             border: 1px solid black;
             color: white;
         }
@@ -21,33 +21,42 @@
 </head>
 
 <body>
-    <h2>Memory Book Editor</h2>
+
     <div>
         <div id='app'>
             <el-container>
-                <el-aside width="200px">Aside</el-aside>
+                <el-aside width="200px">
+                    <ul>
+                        <li v-for='page in book.PaperNameList'>
+                            <a href="#" v-on:click='showpage'>{{ page }}</a>
+                        </li>
+                    </ul>
+                </el-aside>
                 <el-container>
-                    <el-header>Header</el-header>
+                    <el-header>
+                        <h2>Memory Book Editor</h2>
+                    </el-header>
                     <el-main>
-                        <v-book></v-book>
+                        <div v-if="page != null" class="page-viewer" v-bind:style='{background: bgColorInHex}'>
+                            <div v-for='picture in pageContent.pictureList'>
+                                <img :src="'data/testbook/images/'+picture.FileName"
+                                    v-bind:style="{marginLeft: picture.Position.X +'cm', marginTop: picture.Position.Y +'cm', width: picture.Width+'cm', height: picture.Height+'cm'}">
+                            </div>
+
+                        </div>
                     </el-main>
-                    <el-footer>Footer</el-footer>
+                    <el-footer>
+
+                    </el-footer>
                 </el-container>
             </el-container>
         </div>
 
         <div id="book">
-            <ul>
-                <li v-for='page in book.PaperNameList'>
-                    <a href="#" v-on:click='showpage'>{{ page }}</a>
-                </li>
-            </ul>
+
         </div>
 
-        <div id='page-viewer' v-bind:style='{background: bgColorInHex}'>
-            <img src="data/testbook/images/古剑奇谭3.jpg" alt="" width="300" height="200"
-                style="margin-left: 30px; margin-top: 50px">
-        </div>
+
     </div>
 </body>
 
@@ -59,15 +68,14 @@
     <script src="js/utils.js"></script>
     <script src="jsontypes.js"></script>
     <script>
-        var app = new Vue({
-            el: '#app'
-        });
 
-        var book = new Vue({
-            el: '#book',
+        var app = new Vue({
+            el: '#app',
             data() {
                 return {
-                    book: new Book()
+                    book: new Book(),
+                    page: null,
+                    isFace: true
                 }
             },
             mounted() {
@@ -76,26 +84,6 @@
                         this.book = response.data;
                     })
                     .catch(error => { console.log(error); })
-            },
-            methods: {
-                showpage: function (event) {
-                    axios.get('editor/get_page.php?bookname=testbook&pagename=' + event.target.text)
-                        .then(response => {
-                            page_viewer.load(response.data);
-                        });
-                    console.log(event.target.text);
-                }
-            },
-        });
-
-
-        var page_viewer = new Vue({
-            el: '#page-viewer',
-            data() {
-                return {
-                    page: null,
-                    isface: false
-                }
             },
             computed: {
                 bgColorInHex: function () {
@@ -106,15 +94,40 @@
                     console.log(color);
                     return color;
                 },
+                pageContent: function () {
+                    if (isFace)
+                        var content = this.page.FaceContent;
+                    else
+                        var content = this.page.BackContent;
+                    var pictureList = [];
+                    var memoList = [];
+                    content.forEach(element => {
+                        switch (element.Type) {
+                            case "Picture": pictureList.push(element); break;
+                            case "Memo": memoList.push(element); break;
+                        }
+                    });
+                    return {
+                        pictureList, memoList
+                    }
+                }
             },
             methods: {
+                showpage: function (event) {
+                    axios.get('editor/get_page.php?bookname=testbook&pagename=' + event.target.text)
+                        .then(response => {
+                            this.load(response.data);
+                        });
+                    console.log(event.target.text);
+                },
                 load: function (pageData) {
                     this.page = pageData;
-                    isface = false;
+                    isFace = true;
                 }
-            }
-
+            },
         });
+
+
     </script>
 </body>
 

@@ -8,6 +8,21 @@ class Book {
     }
 }
 
-paper = {
-    
+class Vector {
+    constructor() {
+        this.X = 0,
+        this.Y = 0
+    }
+}
+
+class Element {
+    constructor() {
+        this.Type = "",
+        this.Position = new Vector(),
+        this.Width = 0,
+        this.Height = 0,
+        this.FileName = "",
+        this.Text = "",
+        this.FontSize = 0
+    }
 }
